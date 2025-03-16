@@ -4,66 +4,91 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Smart Parking Monitor Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <style>
         * {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
         body {
-            background-color: #f4f6f9;
+            background-color: #f8f9fb;
         }
         .card {
             background-color: white;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
             transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
         .card:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            transform: translateY(-2px);
         }
         .status-indicator {
             display: inline-flex;
             align-items: center;
             padding: 0.5rem 1rem;
-            border-radius: 9999px;
+            border-radius: 8px;
             font-weight: 500;
             font-size: 0.875rem;
         }
-        .soft-border {
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
         .accent-text {
-            color: #2563eb;
+            color: #374151;
         }
         .subtle-text {
             color: #6b7280;
         }
+        .primary-color {
+            color: #1e293b;
+        }
+        .primary-bg {
+            background-color: #1e293b;
+        }
+        .secondary-color {
+            color: #475569;
+        }
+        .progress-bg {
+            background-color: #e2e8f0;
+        }
+        .progress-fill {
+            background-color: #475569;
+        }
+        .action-btn {
+            background-color: #f1f5f9;
+            color: #334155;
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+            background-color: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        .chart-container {
+            height: 300px;
+        }
     </style>
 </head>
-<body class="bg-gray-50">
+<body>
     <div class="container mx-auto px-4 py-8">
         <!-- Header -->
-        <header class="text-center mb-12">
+        <header class="mb-12">
             <div class="flex items-center justify-center mb-3">
-                <i class="fas fa-parking text-4xl text-blue-600 mr-3"></i>
-                <h1 class="text-4xl font-bold text-gray-800">Smart Parking Pro</h1>
+                <i class="fas fa-parking text-4xl primary-color mr-3"></i>
+                <h1 class="text-4xl font-bold primary-color">Smart Parking Pro</h1>
             </div>
-            <p class="text-gray-600 text-lg mb-4">Sistema Inteligente de Monitoramento em Tempo Real</p>
+            <p class="text-gray-600 text-lg mb-6 text-center">Sistema Inteligente de Monitoramento em Tempo Real</p>
             
-            <div class="flex items-center justify-center gap-4">
-                <span class="status-indicator bg-green-50 text-green-600">
+            <div class="flex items-center justify-center gap-4 flex-wrap">
+                <span class="status-indicator bg-green-50 text-green-700 border border-green-100">
                     <i class="fas fa-circle text-green-500 mr-2 animate-pulse"></i>
                     Sistema Ativo
                 </span>
-                <span class="status-indicator bg-blue-50 text-blue-600">
+                <span class="status-indicator bg-gray-50 text-gray-700 border border-gray-100">
                     <i class="fas fa-clock mr-2"></i>
                     <span id="current-time">--:--:--</span>
                 </span>
-                <span class="status-indicator bg-yellow-50 text-yellow-600">
+                <span class="status-indicator bg-gray-50 text-gray-700 border border-gray-100">
                     <i class="fas fa-sun mr-2"></i>
                     <span id="temperature">22°C</span>
                 </span>
@@ -75,17 +100,17 @@
             <!-- Video and Analytics Column -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Video Feed -->
-                <div class="card p-6 soft-border">
+                <div class="card p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-semibold text-gray-800">
-                            <i class="fas fa-video mr-2 text-blue-600"></i>
+                        <h2 class="text-2xl font-semibold primary-color">
+                            <i class="fas fa-video mr-2 secondary-color"></i>
                             Monitoramento ao Vivo
                         </h2>
                         <div class="flex gap-3">
-                            <button class="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors">
+                            <button class="p-2 rounded-lg action-btn">
                                 <i class="fas fa-expand"></i>
                             </button>
-                            <button class="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors">
+                            <button class="p-2 rounded-lg action-btn">
                                 <i class="fas fa-camera"></i>
                             </button>
                         </div>
@@ -100,48 +125,50 @@
                 </div>
 
                 <!-- Occupancy Analytics -->
-                <div class="card p-6 soft-border">
-                    <h2 class="text-2xl font-semibold text-gray-800 mb-6">
-                        <i class="fas fa-chart-line mr-2 text-blue-600"></i>
+                <div class="card p-6">
+                    <h2 class="text-2xl font-semibold primary-color mb-6">
+                        <i class="fas fa-chart-line mr-2 secondary-color"></i>
                         Análise de Ocupação
                     </h2>
-                    <canvas id="occupancyChart" height="200"></canvas>
+                    <div class="chart-container">
+                        <canvas id="occupancyChart"></canvas>
+                    </div>
                 </div>
             </div>
 
             <!-- Stats and Actions Column -->
             <div class="space-y-8">
                 <!-- Parking Statistics -->
-                <div class="card p-6 soft-border">
+                <div class="card p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-semibold text-gray-800">
-                            <i class="fas fa-chart-pie mr-2 text-blue-600"></i>
+                        <h2 class="text-2xl font-semibold primary-color">
+                            <i class="fas fa-chart-pie mr-2 secondary-color"></i>
                             Estatísticas
                         </h2>
-                        <button id="refresh-stats" class="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors">
+                        <button id="refresh-stats" class="p-2 rounded-lg action-btn">
                             <i class="fas fa-sync-alt"></i>
                         </button>
                     </div>
 
                     <!-- Available Spaces -->
-                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                    <div class="bg-gray-50 p-5 rounded-lg mb-5 border border-gray-100">
                         <div class="flex items-center justify-between">
                             <div>
-                                <h3 class="subtle-text">Vagas Disponíveis</h3>
-                                <p id="free-spaces" class="text-3xl font-bold accent-text">-</p>
+                                <h3 class="subtle-text text-sm font-medium">Vagas Disponíveis</h3>
+                                <p id="free-spaces" class="text-3xl font-bold accent-text mt-2">-</p>
                             </div>
                             <div class="w-16 h-16" id="spaces-ring-container">
                                 <svg class="w-16 h-16">
                                     <circle class="text-gray-200" stroke-width="5" stroke="currentColor" fill="transparent" r="30" cx="32" cy="32" />
-                                    <circle class="text-blue-500" stroke-width="5" stroke="currentColor" fill="transparent" r="30" cx="32" cy="32" />
+                                    <circle class="text-gray-600" stroke-width="5" stroke="currentColor" fill="transparent" r="30" cx="32" cy="32" />
                                 </svg>
                             </div>
                         </div>
                     </div>
 
                     <!-- Occupation Rate -->
-                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
-                        <h3 class="subtle-text mb-2">Taxa de Ocupação</h3>
+                    <div class="bg-gray-50 p-5 rounded-lg mb-5 border border-gray-100">
+                        <h3 class="subtle-text text-sm font-medium mb-2">Taxa de Ocupação</h3>
                         <div class="relative pt-1">
                             <div class="flex items-center justify-between">
                                 <div>
@@ -153,32 +180,32 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="overflow-hidden h-2 mt-4 rounded bg-blue-100">
-                                <div id="occupation-bar" class="h-2 rounded bg-blue-500" style="width: 0%"></div>
+                            <div class="overflow-hidden h-2 mt-4 rounded progress-bg">
+                                <div id="occupation-bar" class="h-2 rounded progress-fill" style="width: 0%"></div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Peak Hours -->
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <h3 class="subtle-text mb-4">Horários de Pico</h3>
-                        <div class="space-y-3">
+                    <div class="bg-gray-50 p-5 rounded-lg border border-gray-100">
+                        <h3 class="subtle-text text-sm font-medium mb-4">Horários de Pico</h3>
+                        <div class="space-y-4">
                             <div class="flex items-center justify-between">
                                 <span class="text-sm subtle-text">Manhã (8h-10h)</span>
-                                <div class="w-2/3 bg-blue-100 rounded-full h-2">
-                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 85%"></div>
+                                <div class="w-2/3 progress-bg rounded-full h-2">
+                                    <div class="progress-fill h-2 rounded-full" style="width: 85%"></div>
                                 </div>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="text-sm subtle-text">Tarde (13h-15h)</span>
-                                <div class="w-2/3 bg-blue-100 rounded-full h-2">
-                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                                <div class="w-2/3 progress-bg rounded-full h-2">
+                                    <div class="progress-fill h-2 rounded-full" style="width: 75%"></div>
                                 </div>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="text-sm subtle-text">Noite (18h-20h)</span>
-                                <div class="w-2/3 bg-blue-100 rounded-full h-2">
-                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 95%"></div>
+                                <div class="w-2/3 progress-bg rounded-full h-2">
+                                    <div class="progress-fill h-2 rounded-full" style="width: 95%"></div>
                                 </div>
                             </div>
                         </div>
@@ -186,25 +213,25 @@
                 </div>
 
                 <!-- Quick Actions -->
-                <div class="card p-6 soft-border">
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">
-                        <i class="fas fa-bolt mr-2 text-blue-600"></i>
+                <div class="card p-6">
+                    <h2 class="text-xl font-semibold primary-color mb-4">
+                        <i class="fas fa-bolt mr-2 secondary-color"></i>
                         Ações Rápidas
                     </h2>
                     <div class="grid grid-cols-2 gap-4">
-                        <button class="p-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                        <button class="p-4 action-btn rounded-lg flex flex-col items-center">
                             <i class="fas fa-file-export mb-2 text-xl"></i>
                             <span class="block text-sm">Exportar Dados</span>
                         </button>
-                        <button class="p-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                        <button class="p-4 action-btn rounded-lg flex flex-col items-center">
                             <i class="fas fa-bell mb-2 text-xl"></i>
                             <span class="block text-sm">Notificações</span>
                         </button>
-                        <button class="p-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                        <button class="p-4 action-btn rounded-lg flex flex-col items-center">
                             <i class="fas fa-history mb-2 text-xl"></i>
                             <span class="block text-sm">Histórico</span>
                         </button>
-                        <button class="p-4 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition-colors">
+                        <button class="p-4 action-btn rounded-lg flex flex-col items-center">
                             <i class="fas fa-cog mb-2 text-xl"></i>
                             <span class="block text-sm">Configurações</span>
                         </button>
@@ -219,9 +246,9 @@
                 &copy; 2024 Smart Parking Monitor Pro. Todos os direitos reservados.
             </p>
             <div class="flex justify-center mt-4 space-x-4">
-                <a href="#" class="text-blue-600 hover:underline">Termos de Uso</a>
+                <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors">Termos de Uso</a>
                 <span class="text-gray-400">|</span>
-                <a href="#" class="text-blue-600 hover:underline">Política de Privacidade</a>
+                <a href="#" class="text-gray-600 hover:text-gray-800 transition-colors">Política de Privacidade</a>
             </div>
         </footer>
     </div>
@@ -237,11 +264,27 @@
             document.getElementById("current-time").textContent = timeString;
         }
 
-        function updateData() {
-            document.getElementById("free-spaces").textContent = "10";
-            document.getElementById("total-spaces").textContent = "50";
-            document.getElementById("percentage").textContent = "20%";
-            document.getElementById("occupation-bar").style.width = "20%";
+        async function fetchParkingStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const data = await response.json();
+                updateParkingStats(data);
+            } catch (error) {
+                console.error('Erro ao buscar estatísticas:', error);
+                // Mock data for demo purposes
+                updateParkingStats({
+                    current: 15,
+                    total: 50,
+                    percentage: 70
+                });
+            }
+        }
+
+        function updateParkingStats(stats) {
+            document.getElementById("free-spaces").textContent = stats.current;
+            document.getElementById("total-spaces").textContent = stats.total;
+            document.getElementById("percentage").textContent = `${stats.percentage}%`;
+            document.getElementById("occupation-bar").style.width = `${stats.percentage}%`;
 
             const ctx = document.getElementById("occupancyChart").getContext("2d");
             new Chart(ctx, {
@@ -250,21 +293,44 @@
                     labels: ["Disponíveis", "Ocupados"],
                     datasets: [{
                         label: "Vagas",
-                        data: [10, 40],
-                        backgroundColor: ["#2563eb", "#3b82f6"],
+                        data: [stats.current, stats.total - stats.current],
+                        backgroundColor: ["#475569", "#64748b"],
                     }],
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
                     scales: {
-                        y: { beginAtZero: true }
+                        y: { 
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
                     }
                 }
             });
         }
 
         setInterval(updateCurrentTime, 1000);
-        setInterval(updateData, 5000);
+        setInterval(fetchParkingStats, 5000);
+
+        // Initial calls
+        updateCurrentTime();
+        fetchParkingStats();
+        
+        // Mock data for demonstration purposes
+        document.getElementById('temperature').textContent = '22°C';
     </script>
 </body>
 </html>
